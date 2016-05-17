@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright @ 2015 Atlassian Pty Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -390,6 +390,20 @@ public class FakeUser implements PacketListener
         {
             try
             {
+                /**
+                 * Make an attempt to send an IQ to Focus user
+                 * in order to enable Jingle for the conference
+                 */
+
+                synchronized (this.hammer.getFocusInvitationSyncRoot())
+                {
+
+                    if (!this.hammer.getFocusInvited()) {
+                        inviteFocus();
+                    }
+
+                }
+
                 muc.join(nickname);
 
                 muc.sendMessage("Hello World!");
@@ -402,20 +416,6 @@ public class FakeUser implements PacketListener
                 presencePacket.setTo(roomURL + "/" + nickname);
                 presencePacket.addExtension(new Nick(nickname));
                 connection.sendPacket(presencePacket);
-
-                /**
-                 * Make an attempt to send an IQ to Focus user 
-                 * in order to enable Jingle for the conference
-                 */
-            
-                synchronized (this.hammer.getFocusInvitationSyncRoot()) 
-                {
-                    
-                    if (!this.hammer.getFocusInvited()) {
-                        inviteFocus();
-                    }
-                    
-                }
             }
             catch (XMPPException.XMPPErrorException e)
             {
@@ -459,14 +459,15 @@ public class FakeUser implements PacketListener
      */
     public void stop()
     {
-        logger.info(this.nickname + " : stopping the streams, leaving the MUC"
+        System.out.println(this.nickname + " : stopping the streams, leaving the MUC"
             + " and disconnecting from the XMPP server");
         if(agent != null)
             agent.free();
-        for(MediaStream stream : mediaStreamMap.values())
-        {
-            stream.close();
-        }
+        // The hammer will stall trying to close the video stream.
+//        for(MediaStream stream : mediaStreamMap.values())
+//        {
+//            stream.close();
+//        }
         if(connection !=null)
         {
             if(sessionAccept != null)
@@ -482,7 +483,11 @@ public class FakeUser implements PacketListener
                                         Reason.GONE,
                                         "Bye Bye")
                     );
-                    if(muc != null) muc.leave();
+
+                    if(muc != null) {
+                        muc.leave();
+                    }
+
                     connection.disconnect();
                 }
                 catch (SmackException.NotConnectedException e) {

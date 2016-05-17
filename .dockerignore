@@ -1,0 +1,10 @@
+.dockerignore
+Dockerfile
+.idea
+.git*
+.jitsi-hammer
+jitsi-hammer.iml
+*.ks
+README.md
+resources
+jitsi-hammer.sh
