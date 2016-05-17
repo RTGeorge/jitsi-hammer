@@ -13,8 +13,7 @@ ENV AUDIO_RTP_DUMP="hammer-opus.rtpdump" \
     KEYSTORE_FILE="/keystore.ks" \
     KEYSTORE_PWD=123456 \
     USERS=2 \
-    BOSH_HOST="example.com" \
-    BOSH_URI="https://example.com/http-bind"
+    BOSH_HOST="example.com"
 
 RUN unzip /jitsi-hammer-1.0-SNAPSHOT-linux-x64-bin-archive.zip && \
   rm /jitsi-hammer-1.0-SNAPSHOT-linux-x64-bin-archive.zip && \

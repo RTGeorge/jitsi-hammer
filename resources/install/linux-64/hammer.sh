@@ -1,10 +1,6 @@
 #!/bin/sh
 
-echo $USERS
-echo $PASSWORD
-echo $KEYSTORE_FILE
-echo $KEYSTORE_PWD
-echo $BOSH_HOST
+# TODO add check for required stuff
 
 # Create keystore files
 if [ ! -f $KEYSTORE_FILE ]
@@ -24,7 +20,7 @@ do
 done
 
 # run jar
-java -Djavax.net.ssl.keyStore=${KEYSTORE_FILE} \
+exec java -Djavax.net.ssl.keyStore=${KEYSTORE_FILE} \
   -Djavax.net.ssl.keyStorePassword=${KEYSTORE_PWD} \
   -Djavax.net.ssl.trustStore=${KEYSTORE_FILE} \
   -Djavax.net.ssl.trustStorePassword=${KEYSTORE_PWD} \
@@ -45,5 +41,3 @@ java -Djavax.net.ssl.keyStore=${KEYSTORE_FILE} \
   -allstats \
   -interval ${INTERVAL} \
   -u "https://${BOSH_HOST}/http-bind"
-
-exit 0
