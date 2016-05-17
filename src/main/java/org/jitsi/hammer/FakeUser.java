@@ -512,6 +512,19 @@ public class FakeUser implements StanzaListener
         {
             try
             {
+                /*
+                 * Make an attempt to send an IQ to Focus user
+                 * in order to enable Jingle for the conference
+                 */
+                synchronized (this.hammer.getFocusInvitationSyncRoot())
+                {
+
+                    if (!this.hammer.getFocusInvited()) {
+                        inviteFocus();
+                    }
+
+                }
+
                 muc.join(Resourcepart.from(nickname));
 
                 muc.sendMessage("Goodbye cruel World!");
@@ -524,19 +537,6 @@ public class FakeUser implements StanzaListener
                 presencePacket.setTo(roomURL + "/" + nickname);
                 presencePacket.addExtension(new Nick(nickname));
                 connection.sendStanza(presencePacket);
-
-                /*
-                 * Make an attempt to send an IQ to Focus user 
-                 * in order to enable Jingle for the conference
-                 */
-                synchronized (this.hammer.getFocusInvitationSyncRoot())
-                {
-                    
-                    if (!this.hammer.getFocusInvited()) {
-                        inviteFocus();
-                    }
-                    
-                }
             }
             catch (XMPPException.XMPPErrorException e)
             {
@@ -588,6 +588,7 @@ public class FakeUser implements StanzaListener
             + " and disconnecting from the XMPP server");
         if(agent != null)
             agent.free();
+        //TODO: Check if the hammer still stalls trying to close the video stream.
         for(MediaStream stream : mediaStreamMap.values())
         {
             stream.close();
@@ -599,6 +600,15 @@ public class FakeUser implements StanzaListener
                 try
                 {
                     //TODO(brian): send session-terminate message
+//                    connection.sendPacket(
+//                            Smack4AwareJinglePacketFactory
+//                                    .createSessionTerminate(
+//                                        sessionAccept.getFrom(),
+//                                        sessionAccept.getTo(),
+//                                        sessionAccept.getSID(),
+//                                        Reason.GONE,
+//                                        "Bye Bye")
+//                    );
                     if(muc != null) muc.leave();
                     connection.disconnect();
                 }

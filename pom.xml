@@ -7,7 +7,8 @@
     <parent>
         <groupId>org.jitsi</groupId>
         <artifactId>jitsi-universe</artifactId>
-        <version>1.0-20160202.203332-11</version>
+        <version>1.0-20160405.235512-16</version>
+        <!--<version>1.0-20160202.203332-11</version>-->
     </parent>
 
     <artifactId>jitsi-hammer</artifactId>
@@ -114,6 +115,37 @@
     <build>
         <plugins>
             <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+                <execution>
+                <id>assembly-linux-x64-bin-archive</id>
+                <phase>package</phase>
+                <goals>
+                    <goal>single</goal>
+                </goals>
+                <configuration>
+                    <descriptor>src/assembly/linux-x64-bin-archive.xml</descriptor>
+                </configuration>
+                </execution>
+            </executions>
+            </plugin>
+
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>org.jitsi.hammer.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.4.0</version>
@@ -121,6 +153,28 @@
                     <mainClass>org.jitsi.hammer.Main</mainClass>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.9</version>
+                <configuration>
+                    <imageName>pstros/jitsi-hammer</imageName>
+                    <dockerDirectory>docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}-linux-x64-bin-archive.zip</include>
+                        </resource>
+                    </resources>
+                    <imageTags>
+                        <imageTag>${project.version}</imageTag>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
