@@ -115,3 +115,13 @@ The stats will be saved in JSON in a directory depending of your system :
 You can adjust the logging configuration of the JVM with the file ./lib/logging.properties .  
 
 For now it is set to only display at a WARNING level, but you can set "org.jitsi.hammer.level" to INFO if you want to print the INFO log of Jitsi-Hammer (but not libjitsi).
+
+## Docker images
+To create docker image run:
+```
+mvn clean package docker:build
+```
+To push image to docker hub.  You must be logged into docker hub first then run:
+```
+mvn clean package docker:build -DpushImage
+```

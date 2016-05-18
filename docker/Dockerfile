@@ -1,6 +1,6 @@
 FROM java:8-jre-alpine
 
-COPY ./target/jitsi-hammer-1.0-SNAPSHOT-linux-x64-bin-archive.zip /
+COPY ./jitsi-hammer-1.0-SNAPSHOT-linux-x64-bin-archive.zip /
 
 ENV AUDIO_RTP_DUMP="hammer-opus.rtpdump" \
     VIDEO_RTP_DUMP="rtp_vp8.rtpdump" \
