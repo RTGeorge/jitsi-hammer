@@ -1,5 +1,7 @@
 FROM java:8-jre-alpine
 
+RUN apk update && apk add openssl
+
 COPY ./jitsi-hammer-1.0-SNAPSHOT-linux-x64-bin-archive.zip /
 
 ENV AUDIO_RTP_DUMP="hammer-opus.rtpdump" \
@@ -13,6 +15,8 @@ ENV AUDIO_RTP_DUMP="hammer-opus.rtpdump" \
     KEYSTORE_FILE="/keystore.ks" \
     KEYSTORE_PWD=123456 \
     USERS=2 \
+    CHANNEL_LAST_N=-1 \
+    ADAPTIVE_LAST_N="false" \
     BOSH_HOST="example.com"
 
 RUN unzip /jitsi-hammer-1.0-SNAPSHOT-linux-x64-bin-archive.zip && \

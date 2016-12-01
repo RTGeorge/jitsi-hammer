@@ -40,4 +40,6 @@ exec java -Djavax.net.ssl.keyStore=${KEYSTORE_FILE} \
   -overallstats \
   -allstats \
   -interval ${INTERVAL} \
+  -channelLastN ${CHANNEL_LAST_N} \
+  -adaptiveLastN ${ADAPTIVE_LAST_N} \
   -u "https://${BOSH_HOST}/http-bind"
