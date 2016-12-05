@@ -191,11 +191,11 @@ public class CmdLineArguments
     private String adaptiveLastN = "false";
 
     /**
-     * The "adaptiveSimulcast" conference property
+     * The "disableAdaptiveSimulcast" conference property
      */
-    @Option(name="-adaptiveSimulcast", usage="sets " +
-            "'adaptiveSimulcast' conference parameter")
-    private String adaptiveSimulcast = "false";
+    @Option(name="-disableAdaptiveSimulcast", usage="sets " +
+            "'disableAdaptiveSimulcast' conference parameter")
+    private String disableAdaptiveSimulcast = "true";
 
     /**
      * The "openSctp" conference property
@@ -224,6 +224,13 @@ public class CmdLineArguments
     @Option(name="-simulcastMode", usage="sets " +
             "'simulcastMode' conference parameter")
     private String simulcastMode = "rewriting";
+
+    /**
+     * The "enableLipSync" conference property
+     */
+    @Option(name="-enableLipSync", usage="sets " +
+            "'enableLipSync' conference parameter")
+    private String enableLipSync = "false";
     
 
     /**
@@ -236,11 +243,12 @@ public class CmdLineArguments
         return new ConferenceInfo(
                 channelLastN,
                 adaptiveLastN,
-                adaptiveSimulcast,
+                disableAdaptiveSimulcast,
                 openSctp,
                 startAudioMuted,
                 startVideoMuted,
-                simulcastMode
+                simulcastMode,
+                enableLipSync
         );
     }
 

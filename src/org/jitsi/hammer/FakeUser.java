@@ -337,8 +337,8 @@ public class FakeUser implements PacketListener
                         this.conferenceInfo.getAdaptiveLastN()));
         conferenceInitiationIQ.addConferenceProperty(
                 new ConferencePropertyPacketExtension(
-                        "adaptiveSimulcast",
-                        this.conferenceInfo.getAdaptiveSimulcast()));
+                        "disableAdaptiveSimulcast",
+                        this.conferenceInfo.getDisableAdaptiveSimulcast()));
         conferenceInitiationIQ.addConferenceProperty(
                 new ConferencePropertyPacketExtension("openSctp", 
                         this.conferenceInfo.getOpenSctp()));
@@ -354,6 +354,14 @@ public class FakeUser implements PacketListener
                 new ConferencePropertyPacketExtension(
                         "simulcastMode", 
                         this.conferenceInfo.getSimulcastMode()));
+        conferenceInitiationIQ.addConferenceProperty(
+                new ConferencePropertyPacketExtension(
+                        "enableLipSync",
+                        this.conferenceInfo.getEnableLipSync()));
+        conferenceInitiationIQ.addConferenceProperty(
+                new ConferencePropertyPacketExtension(
+                        "disableRtx",
+                        "true"));
         try 
         {
             this.connection.sendPacket(conferenceInitiationIQ);

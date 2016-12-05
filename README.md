@@ -49,6 +49,7 @@ The **OPTIONAL_OPTIONS** are :
 -startAudioMuted <"startAudioMuted" video conference property for initiated video conference>
 -startVideoMuted <"startVideoMuted" video conference property for initiated video conference>
 -simulcastMode <"simulcastMode" video conference property for initiated video conference>
+-enableLipSync <"enableLipSync" video conference property for initiated video conference>
 ```
 
 Options ```XMPPdomain``` , ```BOSHhost```, ```port``` and ```MUCDomain```, if specified, will override the ones retrieved from ```BOSHuri```.

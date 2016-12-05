@@ -34,9 +34,9 @@ public class ConferenceInfo {
     private String adaptiveLastN;
 
     /**
-     * The "adaptiveSimulcast" conference property
+     * The "disableAdaptiveSimulcast" conference property
      */
-    private String adaptiveSimulcast;
+    private String disableAdaptiveSimulcast;
 
     /**
      * The "openSctp" conference property
@@ -59,32 +59,40 @@ public class ConferenceInfo {
     private String simulcastMode;
 
     /**
+     * The "enableLipSync" conference property
+     */
+    private String enableLipSync;
+
+    /**
      * Create new ConferenceInfo instance
      * 
      * @param channelLastN The "channelLastN" conference property
      * @param adaptiveLastN The "adaptiveLastN" conference property
-     * @param adaptiveSimulcast The "adaptiveSimulcast" conference property
+     * @param disableAdaptiveSimulcast The "disableAdaptiveSimulcast" conference property
      * @param openSctp The "openSctp" conference property
      * @param startAudioMuted The "startAudioMuted" conference property
      * @param startVideoMuted The "startVideoMuted" conference property
      * @param simulcastMode The "simulcastMode" conference property
+     * @param enableLipSync The "enableLipSync" conference property
      */
     public ConferenceInfo(
             String channelLastN,
             String adaptiveLastN,
-            String adaptiveSimulcast,
+            String disableAdaptiveSimulcast,
             String openSctp,
             String startAudioMuted,
             String startVideoMuted,
-            String simulcastMode) 
+            String simulcastMode,
+            String enableLipSync)
     {
         this.channelLastN = channelLastN;
         this.adaptiveLastN = adaptiveLastN;
-        this.adaptiveSimulcast = adaptiveSimulcast;
+        this.disableAdaptiveSimulcast = disableAdaptiveSimulcast;
         this.openSctp = openSctp;
         this.startAudioMuted = startAudioMuted;
         this.startVideoMuted = startVideoMuted;
         this.simulcastMode = simulcastMode;
+        this.enableLipSync = enableLipSync;
     }
 
     /**
@@ -106,12 +114,12 @@ public class ConferenceInfo {
     }
 
     /**
-     * Get the "adaptiveSimulcast" conference property
+     * Get the "disableAdaptiveSimulcast" conference property
      *
-     * @return the "adaptiveSimulcast" conference property
+     * @return the "disableAdaptiveSimulcast" conference property
      */
-    public String getAdaptiveSimulcast() {
-        return adaptiveSimulcast;
+    public String getDisableAdaptiveSimulcast() {
+        return disableAdaptiveSimulcast;
     }
 
     /**
@@ -149,6 +157,13 @@ public class ConferenceInfo {
     public String getSimulcastMode() {
         return simulcastMode;
     }
-    
-    
+
+    /**
+     * Get the "enableLipSync" conference property
+     *
+     * @return the "enableLipSync" conference property
+     */
+    public String getEnableLipSync() {
+        return enableLipSync;
+    }
 }
