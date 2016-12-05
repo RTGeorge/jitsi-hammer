@@ -1,4 +1,4 @@
-FROM java:8-jre-alpine
+FROM openjdk:8-jre-alpine
 
 RUN apk update && apk add openssl
 
@@ -17,6 +17,7 @@ ENV AUDIO_RTP_DUMP="hammer-opus.rtpdump" \
     USERS=2 \
     CHANNEL_LAST_N=-1 \
     ADAPTIVE_LAST_N="false" \
+    ENABLE_LIP_SYNC="false" \
     BOSH_HOST="example.com"
 
 RUN unzip /jitsi-hammer-1.0-SNAPSHOT-linux-x64-bin-archive.zip && \
