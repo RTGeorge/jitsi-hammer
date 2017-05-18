@@ -108,9 +108,9 @@ public class FakeUser implements StanzaListener
 
 
     /**
-     * The <tt>ConnectionConfiguration</tt> equivalent of <tt>serverInfo</tt>.
+     * The <tt>ConnectionConfiguration.Builder</tt> equivalent of <tt>serverInfo</tt>.
      */
-    private BOSHConfiguration config;
+    private BOSHConfiguration.Builder config;
 
     /**
      * The object use to connect to and then communicate with the XMPP server.
@@ -253,9 +253,7 @@ public class FakeUser implements StanzaListener
                     .setFile(serverInfo.getBOSHpath())
                     .setPort(serverInfo.getPort())
                     .setXmppDomain(serverInfo.getXMPPDomain())
-                    .setDebuggerEnabled(smackDebug)
-                    .performSaslAnonymousAuthentication()
-                    .build();
+                    .setDebuggerEnabled(smackDebug);
         }
         catch (XmppStringprepException e)
         {
@@ -328,8 +326,22 @@ public class FakeUser implements StanzaListener
                 NewSourceGroupPacketExtension.NAMESPACE,
                 new NewAbstractExtensionElementProvider<>(NewSourceGroupPacketExtension.class));
 
-        connection = new XMPPBOSHConnection(config);
+        /*
+         * Creation in advance of the MediaStream that will be used later
+         * so the HammerStats can register their MediaStreamStats now.
+         */
+        mediaStreamMap = HammerUtils.createMediaStreams(dtlsControl);
+        if (fakeUserStats != null)
+        {
+            fakeUserStats.setMediaStreamStats(
+                    mediaStreamMap.get(MediaType.AUDIO.toString()));
+            fakeUserStats.setMediaStreamStats(
+                    mediaStreamMap.get(MediaType.VIDEO.toString()));
+        }
 
+    }
+
+    private void initConnectionHandlers() {
         connection.registerIQRequestHandler(new AbstractIqRequestHandler(NewJingleIQ.ELEMENT_NAME, NewJingleIQ.NAMESPACE, IQ.Type.set, IQRequestHandler.Mode.sync)
         {
             @Override
@@ -348,19 +360,6 @@ public class FakeUser implements StanzaListener
                 return result;
             }
         });
-        /*
-         * Creation in advance of the MediaStream that will be used later
-         * so the HammerStats can register their MediaStreamStats now.
-         */
-        mediaStreamMap = HammerUtils.createMediaStreams(dtlsControl);
-        if (fakeUserStats != null)
-        {
-            fakeUserStats.setMediaStreamStats(
-                    mediaStreamMap.get(MediaType.AUDIO.toString()));
-            fakeUserStats.setMediaStreamStats(
-                    mediaStreamMap.get(MediaType.VIDEO.toString()));
-        }
-
 
         ServiceDiscoveryManager discoManager =
             ServiceDiscoveryManager.getInstanceFor(connection);
@@ -391,6 +390,9 @@ public class FakeUser implements StanzaListener
             XMPPException
     {
         logger.info(this.nickname + " : Login anonymously to the XMPP server.");
+        config.performSaslAnonymousAuthentication();
+        connection = new XMPPBOSHConnection(config.build());
+        initConnectionHandlers();
         try
         {
             connection.connect();
@@ -413,20 +415,23 @@ public class FakeUser implements StanzaListener
     public void start(String username,String password)
             throws SmackException,
             IOException,
-            XMPPException
+            XMPPException,
+            InterruptedException
     {
-        //TODO(brian)
-//        logger.info(this.nickname + " : Login with username "
-//                + username + " to the XMPP server.");
-//        connection.connect();
-//        connection.login(username, password, "Jitsi-Hammer");
-//
-//      //set the highest priority possible
-//        Presence presence = new Presence(Presence.Type.available);
-//        presence.setPriority(128);
-//        presence.setStatus("Fake User");
-//        connection.sendPacket(presence);
-//        connectMUC();
+        logger.info(this.nickname + " : Login with username "
+                + username + " to the XMPP server.");
+        config.setUsernameAndPassword(username, password);
+        connection = new XMPPBOSHConnection(config.build());
+        initConnectionHandlers();
+        connection.connect();
+        connection.login(username, password, Resourcepart.from("Jitsi-Hammer"));
+
+        //set the highest priority possible
+        Presence presence = new Presence(Presence.Type.available);
+        presence.setPriority(127);
+        presence.setStatus("Fake User");
+        connection.sendPacket(presence);
+        connectMUC();
     }
 
     /**
